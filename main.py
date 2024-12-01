@@ -4,7 +4,6 @@ from deep_translator import GoogleTranslator
 
 os.system('cls' if os.name == 'nt' else 'clear')
 
-
 def traduzir_para_portugues(texto):
     return GoogleTranslator(source='en', target='pt').translate(texto)
 
@@ -20,10 +19,8 @@ def solicitacao_de_conselhos(qtde):
 
         conselho_original = id['advice']
 
-
         print(f'\nConselho Original (Inglês): {conselho_original}')
         print(f'{traco}Id do Conselho: {str(id["id"])}\n')
-
 
         print("\n--- Você quer traduzir este conselho para português? --- \n")
         traduzir = input().strip().upper()
@@ -45,12 +42,11 @@ def solicitacao_de_conselhos(qtde):
         contar += 1
 
 def guardar_conselho(tupla):
-    with open("teste_1.txt", 'a') as arq:
+    with open("conselhos.txt", 'a') as arq:
         arq.write(tupla[0] + ' --- ' + tupla[1] + '\n')
 
-
 def resgatar_conselho(id):
-    with open("teste_1.txt", 'r') as arq:
+    with open("conselhos.txt", 'r') as arq:
         for leitura in arq:
             if leitura.startswith(id + ' '):
                 print(f"O conselho requerido é: {leitura[len(id) + 1:].strip()}")
@@ -58,25 +54,44 @@ def resgatar_conselho(id):
                 return
         print("Conselho não encontrado.")
 
+def mostrar_todos_conselhos():
+    print("\n--- Todos os Conselhos Armazenados ---\n")
+    try:
+        with open("conselhos.txt", 'r') as arq:
+            conteudo = arq.readlines()
+            if not conteudo:
+                print("Nenhum conselho armazenado ainda.")
+            else:
+                for linha in conteudo:
+                    print(linha.strip())
+    except FileNotFoundError:
+        print("Nenhum arquivo encontrado. Nenhum conselho armazenado ainda.")
 
-print("----- Bom dia! Seja bem-vindo à Cachaçaria do Seu Zé! -------- \n")
-print("----- Depois de uma boa, nada melhor do que buscar orientação na vida, não é mesmo? ----- :) :)\n")
-print("----- Diga quantos conselhos deseja -------\n ")
+print("----- Bem-vindo ao Orientador de Conselhos! -----")
+print("Quantos conselhos você deseja receber?\n")
 
 conselhos = int(input())
 
-
-with open("teste_1.txt", 'w'):
-    pass
-
+with open("conselhos.txt", 'w'):
+    pass  # Limpa o arquivo antes de começar
 
 solicitacao_de_conselhos(conselhos)
 
+while True:
+    print("\n--- Escolha uma das opções abaixo ---")
+    print("1. Resgatar um conselho pelo ID")
+    print("2. Mostrar todos os conselhos armazenados")
+    print("3. Sair")
+    escolha = input("\nDigite sua escolha: ").strip()
 
-print("---- Você deseja resgatar algum conselho? ------ \n")
-s = input('\n')
-
-if s.upper() == 'SIM':
-    print("\nDigite o id \n")
-    id = input()
-    resgatar_conselho(str(id))
+    if escolha == '1':
+        print("\nDigite o ID do conselho que deseja resgatar: ")
+        id = input()
+        resgatar_conselho(id)
+    elif escolha == '2':
+        mostrar_todos_conselhos()
+    elif escolha == '3':
+        print("Obrigado por usar o Orientador de Conselhos. Até logo!")
+        break
+    else:
+        print("Opção inválida. Tente novamente.")
